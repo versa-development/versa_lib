@@ -12,13 +12,18 @@ games { 'rdr3', 'gta5' }
 description 'A modular utility library for FiveM & RedM'
 
 files {
-  'init.lua',
-  'bridge/**/*.lua',
+  'data/*.lua',
+  'bridge/**/**/*.lua',
   'modules/**/*.lua',
-  'config.lua',
+  'utils/*.lua',
 }
 
-client_scripts {'
+shared_scripts {
+  '@ox_lib/init.lua',
+  'init.lua'
+}
+
+client_scripts {
   'runtime/**/client.lua',
 }
 
