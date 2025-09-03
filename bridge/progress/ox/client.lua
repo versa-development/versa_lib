@@ -13,11 +13,11 @@ function progressBar.init(data)
     useWhileDead = states.useWhileDead or false,
     canCancel = states.canCancel or false,
     disable = {
-      move = states.disableMovement,
-      car = states.disableDriving,
-      combat = states.disableCombat,
-      mouse = states.disableMouseMovement,
-      sprint = states.disableSprint,
+      move = states.disableMovement or false,
+      car = states.disableDriving or false,
+      combat = states.disableCombat or false,
+      mouse = states.disableMouseMovement or false,
+      sprint = states.disableSprint or false
     },
     anim = animation,
     prop = prop,
