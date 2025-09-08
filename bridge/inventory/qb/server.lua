@@ -5,7 +5,7 @@ local inventory = {}
 function inventory.giveItem(inventoryId, item, amount, metadata)
   -- QB Inventory has different functions for adding items to players and stashes...
   if type(inventoryId) == 'number' then
-    exports['qb-inventory']:AddItem(inventoryId, item, amount, false, metadata, 'versa_lib:giveItem')
+    exports['qb-inventory']:AddItem(inventoryId, item, amount, false, metadata, 'versa_sdk:giveItem')
   else
     -- todo: sql query for stashes
   end
@@ -13,7 +13,7 @@ end
 
 function inventory.removeItem(inventoryId, item, amount, metadata, slot)
   if type(inventoryId) == 'number' then
-    exports['qb-inventory']:RemoveItem(inventoryId, item, amount, slot, 'versa_lib:removeItem') --todo: metadata support
+    exports['qb-inventory']:RemoveItem(inventoryId, item, amount, slot, 'versa_sdk:removeItem') --todo: metadata support
   else
     -- todo: sql query for stashes
   end

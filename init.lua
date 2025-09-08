@@ -6,5 +6,5 @@ if IsDuplicityVersion() then
   math.randomseed()
 
   local resourceVersion = GetResourceMetadata(GetCurrentResourceName(), 'version', 0)   -- TODO: VERSION CHECK!
-  log.info('Versa Lib v' .. resourceVersion)
+  log.info('Versa SDK v' .. resourceVersion)
 end

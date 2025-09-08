@@ -22,7 +22,7 @@ function progressBar.init(data)
   end
     
   exports['progressbar']:Progress({
-    name = 'versa_lib_' .. math.random(1000, 9999),
+    name = 'versa_sdk_' .. math.random(1000, 9999),
     duration = duration,
     label = label,
     useWhileDead = states.useWhileDead or false,

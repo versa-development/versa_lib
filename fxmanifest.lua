@@ -5,11 +5,11 @@ dependencies {
   '/onesync', -- requires state awareness to be enabled
 }
 
-name 'versa_lib'
+name 'versa_sdk'
 author 'Versa Development'
 version '0.1'
 games { 'rdr3', 'gta5' }
-description 'A modular utility library for FiveM & RedM'
+description 'Core SDK for FiveM & RedM — modular systems, framework bridges & dev tools'
 
 files {
   'data/*.lua',
