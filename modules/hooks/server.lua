@@ -7,8 +7,16 @@ local log = require 'utils.logger'
 -- @param resource string - Invoking Resource Name
 -- @return string - Generated Listener id
 local function generateListenerId(resource)
-    hookCounters[resource] = (hookCounters[resource] or 0) + 1
-    return resource .. '-' .. hookCounters[resource]
+  local randomPart = string.format(
+    "%08x-%04x-%04x-%04x-%012x",
+    math.random(0, 0xffffffff),
+    math.random(0, 0xffff),
+    math.random(0, 0xffff),
+    math.random(0, 0xffff),
+    math.random(0, 0xffffffffffff)
+  )
+
+  return ("%s-%s"):format(resource, randomPart)
 end
 
 --- Register a listener for a hook
