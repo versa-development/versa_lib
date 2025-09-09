@@ -6,6 +6,7 @@ function progressBar.init(data)
   local prop = data.prop or nil
   local states = data.states or nil
   
+  -- Convert animation to QB structure
   local animation = data.animation and {
     animDict = data.animation.dict,
     anim = data.animation.name,
@@ -13,12 +14,14 @@ function progressBar.init(data)
   } or nil
 
   -- checking if there are multiple props defined
-  if data.prop and type(data.prop) == 'table' and next(data.prop) then
-    prop = data.prop[1]
-    prop2 = data.prop[2]
-  elseif data.prop and type(data.prop) == 'table' and not next(data.prop) then
-    prop = data.prop
-    prop2 = nil
+  local propOne, propTwo = nil, nil
+  if prop ~= nil then
+    if type(data.prop[1]) == "table" then
+      propOne = data.prop[1]
+      propTwo = data.prop[2]
+    else
+      propOne = data.prop
+    end
   end
     
   exports['progressbar']:Progress({
@@ -34,7 +37,7 @@ function progressBar.init(data)
       disableCombat = states.disableCombat or false,
     },
     animation = animation,
-    prop = prop or nil,
+    prop = propOne or nil,
     propTwo = propTwo or nil,
   }, function(cancelled)
     return (not cancelled)
