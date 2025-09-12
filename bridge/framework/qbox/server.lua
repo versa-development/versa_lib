@@ -1,47 +1,56 @@
-local framework = {}
+local qbx = {}
+local types = require 'utils.types'
 
+--- Structure the central character object
 local function structureResponse(data)
-  return {
-    playerId = data.PlayerData.citizenid,
+  return types.character({
+    identifier = data.PlayerData.citizenid,
     source = data.PlayerData.source,
     firstname = data.PlayerData.charinfo.firstname,
     lastname = data.PlayerData.charinfo.lastname,
-    fullname = data.PlayerData.charinfo.firstname .. ' ' .. data.PlayerData.charinfo.lastname,
-  }
+    metadata = data.PlayerData.metadata
+  })
 end
 
-function framework.getPlayer(source)
+function qbx.getPlayer(source)
   local player = exports.qbx_core:GetPlayer(source)
-  if not player then return nil end
+  if not player then return false end
 
   return structureResponse(player)
 end
 
-function framework.getPlayerFromId(playerId)
-  local player =  exports.qbx_core:GetPlayerByCitizenId(playerId)
-  if not player then return nil end
+function qbx.getPlayerFromIdentifier(identifier)
+  local player = exports.qbx_core:GetPlayerByCitizenId(identifier)
+  if not player then return false end
 
   return structureResponse(player)
 end
 
-function framework.getPlayers()
-  return exports.qbx_core:GetQBPlayers()
+function qbx.getPlayers()
+  local data = {}
+  local players = exports.qbx_core:GetQBPlayers()
+  
+  for i = 1, #players do
+    data[#data + 1] = structureResponse(players[i])
+  end
+
+  return data
 end
 
-function framework.getMetaDataValue(source, key)
+function qbx.getMetaDataValue(source, key)
   return exports.qbx_core:GetMetadata(source, key)
 end
 
-function framework.setMetaDataValue(source, key, value)
+function qbx.setMetaDataValue(source, key, value)
   return exports.qbx_core:SetMetadata(source, key, value)
 end
 
-function framework.addMoney(source, type, amount, reason)
+function qbx.addMoney(source, type, amount, reason)
   return exports.qbx_core:AddMoney(source, type, amount, reason)
 end
 
-function framework.removeMoney(source, type, amount, reason)
+function qbx.removeMoney(source, type, amount, reason)
   return exports.qbx_core:RemoveMoney(source, type, amount, reason)
 end
 
-return framework
+return qbx
