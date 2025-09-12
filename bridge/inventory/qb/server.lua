@@ -1,8 +1,8 @@
-local inventory = {}
+local qb = {}
 
 -- qb inventory stash ref: https://github.com/qbcore-framework/qb-inventory/pull/397/files
 
-function inventory.giveItem(inventoryId, item, amount, metadata)
+function qb.giveItem(inventoryId, item, amount, metadata)
   -- QB Inventory has different functions for adding items to players and stashes...
   if type(inventoryId) == 'number' then
     exports['qb-inventory']:AddItem(inventoryId, item, amount, false, metadata, 'versa_sdk:giveItem')
@@ -11,7 +11,7 @@ function inventory.giveItem(inventoryId, item, amount, metadata)
   end
 end
 
-function inventory.removeItem(inventoryId, item, amount, metadata, slot)
+function qb.removeItem(inventoryId, item, amount, metadata, slot)
   if type(inventoryId) == 'number' then
     exports['qb-inventory']:RemoveItem(inventoryId, item, amount, slot, 'versa_sdk:removeItem') --todo: metadata support
   else
@@ -19,7 +19,7 @@ function inventory.removeItem(inventoryId, item, amount, metadata, slot)
   end
 end
 
-function inventory.hasItem(inventoryId, item, metdata)
+function qb.hasItem(inventoryId, item, metdata)
   if type(inventoryId) == 'number' then
     return exports['qb-inventory']:HasItem(inventoryId, item, 1) -- todo: metadata support
   else
@@ -28,4 +28,4 @@ function inventory.hasItem(inventoryId, item, metdata)
 end
 
 
-return inventory
+return qb
