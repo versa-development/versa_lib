@@ -1,3 +1,4 @@
+-- Global zones cache
 Zones = {}
 
 -- Module imports
@@ -11,19 +12,22 @@ local MIN_X, MAX_X <const> = -3000, 3000
 local MIN_Y, MAX_Y <const> = -3000, 3000
 
 -- Debug RGB Colours
-local INSIDE_ZONE_COLOUR <const> = { r = 0, g = 255, b = 0, a = 50 }
-local SURROUNDING_ZONE_COLOUR <const> = { r = 255, g = 255, b = 0, a = 25 }
-local OUTSIDE_ZONE_COLOUR <const> = { r = 255, g = 0, b = 0, a = 15 }
+local INSIDE_ZONE_COLOUR <const> = { r = 0, g = 255, b = 0, a = 10 }
+local SURROUNDING_ZONE_COLOUR <const> = { r = 255, g = 255, b = 0, a = 10 }
+local OUTSIDE_ZONE_COLOUR <const> = { r = 255, g = 0, b = 0, a = 5 }
+
+-- Runtime variables
+CurrentZoneId = nil
+CurrentSurroundingZones = {}
 
 --- A debug function handling the zone colour changes on enter and exit
--- @param type string 'onEnter' or 'onExit'
+-- @param boolean isEntering True if entering the zone, false if exiting
 -- @param zoneData table The zone object
 local function debugZone(isEntering, zoneData)
   local zone = Zones[zoneData.id]
 
   if isEntering then
-    log.debug('Entered zone at', zoneData.id, json.encode(zone.surroundingZones))
-    zone.debugColour = INSIDE_ZONE_COLOUR
+    zone.zone.debugColour = INSIDE_ZONE_COLOUR
     
     -- Set the surrounding zones to a different colour
     for i = 1, #zone.surroundingZones do
@@ -43,12 +47,51 @@ local function debugZone(isEntering, zoneData)
   end
 end
 
+--- Handle entering a zone, updating current zone and surrounding zones
+-- @param string zoneId The ID of the zone being entered
+local function enterZone(zoneId)
+  local zone = Zones[zoneId]
+
+  -- Check which surrounding zones we need to unload
+  for i = 1, #CurrentSurroundingZones do
+    local surroundingZoneId = CurrentSurroundingZones[i]
+    if not lib.table.contains(zone.surroundingZones, surroundingZoneId) and surroundingZoneId ~= zoneId then
+      TriggerEvent('versa_sdk:chunks:unloadChunkEntities', surroundingZoneId)
+    end
+  end
+
+  CurrentZoneId = zoneId
+  CurrentSurroundingZones = zone.surroundingZones
+
+  if not CreatedEntities[CurrentZoneId] then
+    TriggerEvent('versa_sdk:chunks:loadChunkEntities', CurrentZoneId)
+  end
+
+  for i = 1, #CurrentSurroundingZones do
+    local surroundingZoneId = CurrentSurroundingZones[i]
+    if not CreatedEntities[surroundingZoneId] then
+      TriggerEvent('versa_sdk:chunks:loadChunkEntities', surroundingZoneId)
+    end
+  end
+end
+
+--- A function that returns the zone ID for given coordinates
+-- @coords vector2 The coordinates to check
+-- @return string|nil The zone ID if found, nil otherwise
+function GetZoneIdFromCoords(coords)
+  for zoneId, data in pairs(Zones) do
+    if data.zone:contains(vec3(coords.x, coords.y, 0)) then
+      return zoneId
+    end
+  end
+end
+
 --- Get the surrounding zones (N, NE, E, SE, S, SW, W, NW) for a given zone based on its coordinates.
 -- @param x number The x coordinate of the zone
 -- @param y number The y coordinate of the zone
 -- @return table A list of surrounding zone IDs
 local function getSurroundingZones(x, y)
-  local response = {}
+  local surroundingZones = {}
 
   for dx = -1, 1 do
     for dy = -1, 1 do
@@ -58,7 +101,7 @@ local function getSurroundingZones(x, y)
 
         for zoneId, data in pairs(Zones) do
           if data.zone.coords.x == gridX and data.zone.coords.y == gridY then
-            response[#response + 1] = zoneId
+            surroundingZones[#surroundingZones + 1] = zoneId
             break
           end
         end
@@ -66,12 +109,11 @@ local function getSurroundingZones(x, y)
     end
   end
 
-  return response
+  return surroundingZones
 end
 
 --- Create zones in a grid pattern based on the defined zone size
 local function createZones()
-  -- Creates zones in a grid pattern based on the defined zone size
   for x = MIN_X, MAX_X, ZONE_SIZE do
     for y = MIN_Y, MAX_Y, ZONE_SIZE do
 
@@ -82,9 +124,12 @@ local function createZones()
         rotation = 0,
         onEnter = function(self)
           if config.Debug then debugZone(true, self) end
+
+          enterZone(self.id)
         end,
         onExit = function(self)
           if config.Debug then debugZone(false, self) end
+          Zones[CurrentZoneId].zone.debugColour = OUTSIDE_ZONE_COLOUR
         end,
         debug = config.Debug,
         debugColour = OUTSIDE_ZONE_COLOUR
