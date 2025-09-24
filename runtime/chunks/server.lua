@@ -56,18 +56,18 @@ local function deleteChunkEntity(key)
   end
 
   Chunks[key] = nil
-  -- todo: broadcast deletion event to clients
+  TriggerClientEvent('versa_sdk:chunks:deleteEntities', -1, key)
 
   return true
 end
 
--- Event Handlers
+--- Event Handlers
+-- Cleanup chunk entities on resource stop
 AddEventHandler('onResourceStop', function(resourceName)
   for key, chunkData in pairs(Chunks) do
     if chunkData.resource == resourceName then
       Chunks[key] = nil
-      print('Deleted chunk entity due to resource stop:', key)
-      -- todo: broadcast deletion event to clients
+      TriggerClientEvent('versa_sdk:chunks:deleteEntities', -1, key)
     end
   end
 end)
