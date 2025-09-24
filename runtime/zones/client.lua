@@ -47,34 +47,6 @@ local function debugZone(isEntering, zoneData)
   end
 end
 
---- Handle entering a zone, updating current zone and surrounding zones
--- @param string zoneId The ID of the zone being entered
-local function enterZone(zoneId)
-  local zone = Zones[zoneId]
-
-  -- Check which surrounding zones we need to unload
-  for i = 1, #CurrentSurroundingZones do
-    local surroundingZoneId = CurrentSurroundingZones[i]
-    if not lib.table.contains(zone.surroundingZones, surroundingZoneId) and surroundingZoneId ~= zoneId then
-      TriggerEvent('versa_sdk:chunks:unloadChunkEntities', surroundingZoneId)
-    end
-  end
-
-  CurrentZoneId = zoneId
-  CurrentSurroundingZones = zone.surroundingZones
-
-  if not CreatedEntities[CurrentZoneId] then
-    TriggerEvent('versa_sdk:chunks:loadChunkEntities', CurrentZoneId)
-  end
-
-  for i = 1, #CurrentSurroundingZones do
-    local surroundingZoneId = CurrentSurroundingZones[i]
-    if not CreatedEntities[surroundingZoneId] then
-      TriggerEvent('versa_sdk:chunks:loadChunkEntities', surroundingZoneId)
-    end
-  end
-end
-
 --- A function that returns the zone ID for given coordinates
 -- @coords vector2 The coordinates to check
 -- @return string|nil The zone ID if found, nil otherwise
@@ -125,7 +97,7 @@ local function createZones()
         onEnter = function(self)
           if config.Debug then debugZone(true, self) end
 
-          enterZone(self.id)
+          TriggerEvent('versa_sdk:zones:enteredZone', self.id)
         end,
         onExit = function(self)
           if config.Debug then debugZone(false, self) end
