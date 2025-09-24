@@ -15,12 +15,12 @@ RegisterNetEvent('versa_sdk:chunks:deleteEntities')
 -- @param table data The chunk entity data
 -- @return number The created object ID
 local function createChunkEntity(zoneId, data)
-  print('create object', zoneId, json.encode(data))
   if not CreatedEntities[zoneId] then
     CreatedEntities[zoneId] = {}
   end
 
   local objectId = CreateObject(data.model, data.coords.x, data.coords.y, data.coords.z, false, false, false)
+  log.debug('Created chunk entity:', data.key, 'in zone:', zoneId, 'with object ID:', objectId)
 
   CreatedEntities[zoneId][data.key] = objectId
   SetEntityHeading(objectId, (data.coords.w or 0))
@@ -38,14 +38,16 @@ end
 local function deleteChunkEntity(zoneId, key)
   if CreatedEntities[zoneId] and CreatedEntities[zoneId][key] then
     local objectId = CreatedEntities[zoneId][key]
-    
+
     if DoesEntityExist(objectId) then
       DeleteObject(objectId)
     end
     CreatedEntities[zoneId][key] = nil
+    log.debug('Deleted chunk entity:', key, 'in zone:', zoneId)
     return true
   end
 
+  log.error('No created entity found for key:', key, 'in zone:', zoneId)
   return false
 end
 
@@ -127,7 +129,7 @@ end
 --- Load chunk entities for a given zone
 -- @param string zoneId The zone ID
 local function loadChunkEntities(zoneId)
-  log.debug('Loading chunk entities for zone:', zoneId, json.encode(Zones[zoneId].entities))
+  log.debug('Loading chunk entities for zone:', zoneId)
   
   -- Fallback in case entities were not unloaded properly for whatever reason
   if CreatedEntities[zoneId] then
