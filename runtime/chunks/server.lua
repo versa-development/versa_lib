@@ -72,6 +72,12 @@ AddEventHandler('onResourceStop', function(resourceName)
   end
 end)
 
+--- Callbacks
+-- Get all chunks
+lib.callback.register('versa_sdk:chunks:getAll', function()
+  return Chunks
+end)
+
 -- Exports
 exports('CreateChunkEntity', createChunkEntity)
 exports('EditChunkEntity', editChunkEntity)

@@ -120,6 +120,8 @@ local function createZones()
   for zoneId, data in pairs(Zones) do
     Zones[zoneId].surroundingZones = getSurroundingZones(data.zone.coords.x, data.zone.coords.y)
   end
+
+  TriggerEvent('versa_sdk:zones:created')
 end
 
 -- On client load, create the zones

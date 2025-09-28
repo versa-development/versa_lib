@@ -5,6 +5,7 @@ local keyToZoneId = {}
 
 -- Module imports
 local log = require 'utils.logger'
+local target = require 'modules.target.client'
 
 -- Register Net Events
 RegisterNetEvent('versa_sdk:chunks:createEntities')
@@ -27,6 +28,11 @@ local function createChunkEntity(zoneId, data)
   FreezeEntityPosition(objectId, true)
   SetEntityAsMissionEntity(objectId, true, true)
   SetModelAsNoLongerNeeded(data.model)
+
+  if data.target then
+    data.target.entity = objectId
+    target.addEntity(data.target)
+  end
 
   return objectId
 end
@@ -205,5 +211,12 @@ AddEventHandler('onResourceStop', function(resourceName)
     for zoneId, _ in pairs(CreatedEntities) do
       unloadChunkEntities(zoneId)
     end
+  end
+end)
+
+AddEventHandler('versa_sdk:zones:created', function()
+  local allChunks = lib.callback.await('versa_sdk:chunks:getAll')
+  for key, data in pairs(allChunks) do
+    cacheChunkEntity(data)
   end
 end)
