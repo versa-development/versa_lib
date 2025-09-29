@@ -6,10 +6,10 @@ local config = require 'data.config'
 local log = require 'utils.logger'
 
 -- Zone coordinates and values for the world grid
-local ZONE_SIZE <const> = 250
-local ZONE_HEIGHT <const> = 500
-local MIN_X, MAX_X <const> = -3000, 3000
-local MIN_Y, MAX_Y <const> = -3000, 3000
+local ZONE_SIZE <const> = 450
+local ZONE_HEIGHT <const> = 2000
+local MIN_X, MAX_X <const> = -6000, 8000
+local MIN_Y, MAX_Y <const> = -6000, 8000
 
 -- Debug RGB Colours
 local INSIDE_ZONE_COLOUR <const> = { r = 0, g = 255, b = 0, a = 10 }
@@ -56,6 +56,7 @@ function GetZoneIdFromCoords(coords)
       return zoneId
     end
   end
+  return nil
 end
 
 --- Get the surrounding zones (N, NE, E, SE, S, SW, W, NW) for a given zone based on its coordinates.
