@@ -214,8 +214,9 @@ AddEventHandler('onResourceStop', function(resourceName)
   end
 end)
 
+-- Load all chunk entities into cache when all the world zones have been created
 AddEventHandler('versa_sdk:zones:created', function()
-  local allChunks = lib.callback.await('versa_sdk:chunks:getAll')
+  local allChunks = lib.callback.await('versa_sdk:chunks:getAll', false)
   for key, data in pairs(allChunks) do
     cacheChunkEntity(data)
   end
