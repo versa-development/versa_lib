@@ -13,6 +13,8 @@ local function formatTargetData(data)
     icon = data.icon or 'fa-solid fa-circle',
     distance = data.distance or 2.5,
     canInteract = data.canInteract or nil,
+    items = data.items or nil,
+    anyItem = data.anyItem or false,
     onSelect = function()
       local event = data.event.type == 'client' and TriggerEvent or TriggerServerEvent
       local eventName = data.event.name or error('Missing event name in target data')
