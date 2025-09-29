@@ -1,5 +1,5 @@
 return {
-  Debug = true,
+  Debug = false,
 
   Framework = 'qbox', -- esx, qb, qbox, ox
   Target = 'ox', -- ox, qb
