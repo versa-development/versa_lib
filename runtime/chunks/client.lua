@@ -20,12 +20,22 @@ local function createChunkEntity(zoneId, data)
     CreatedEntities[zoneId] = {}
   end
 
-  local objectId = CreateObject(data.model, data.coords.x, data.coords.y, data.coords.z, false, false, false)
+  if data.type == 'object' then
+    objectId = CreateObject(data.model, data.coords.x, data.coords.y, data.coords.z, false, false, false)
+  elseif data.type == 'ped' then
+    objectId = CreatePed(0, data.model, data.coords.x, data.coords.y, data.coords.z, (data.coords.w or 0), false, false)
+    SetPedCanRagdoll(objectId, false)
+  else
+    log.error('Invalid chunk entity type:', data.type, 'for key:', data.key)
+    return nil
+  end
+
   log.debug('Created chunk entity:', data.key, 'in zone:', zoneId, 'with object ID:', objectId)
 
   CreatedEntities[zoneId][data.key] = objectId
   SetEntityHeading(objectId, (data.coords.w or 0))
   FreezeEntityPosition(objectId, true)
+  SetEntityInvincible(objectId, true)
   SetEntityAsMissionEntity(objectId, true, true)
   SetModelAsNoLongerNeeded(data.model)
 
@@ -45,9 +55,20 @@ local function deleteChunkEntity(zoneId, key)
   if CreatedEntities[zoneId] and CreatedEntities[zoneId][key] then
     local objectId = CreatedEntities[zoneId][key]
 
-    if DoesEntityExist(objectId) then
-      DeleteObject(objectId)
+    -- if object is ped then DeletePed, else DeleteObject
+    local entityType = GetEntityType(objectId)
+    if entityType == 1 then -- 1 = Ped
+      if DoesEntityExist(objectId) then
+        DeletePed(objectId)
+      end
+    elseif entityType == 3 then -- 3 = Object
+      if DoesEntityExist(objectId) then
+        DeleteObject(objectId)
+      end
+    else
+      log.warn('Unknown entity type for chunk entity with key:', key, 'in zone:', zoneId)
     end
+
     CreatedEntities[zoneId][key] = nil
     log.debug('Deleted chunk entity:', key, 'in zone:', zoneId)
     return true
