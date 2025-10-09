@@ -20,11 +20,18 @@ local function createChunkEntity(zoneId, data)
     CreatedEntities[zoneId] = {}
   end
 
+  -- Check if the model exists before adding it to the cache
+  if not lib.requestModel(data.model, 10000) then
+    log.error('Failed to load model for chunk entity:', data.model)
+    return false, 'Failed to load model'
+  end
+
   if data.type == 'object' then
     objectId = CreateObject(data.model, data.coords.x, data.coords.y, data.coords.z, false, false, false)
   elseif data.type == 'ped' then
     objectId = CreatePed(0, data.model, data.coords.x, data.coords.y, data.coords.z, (data.coords.w or 0), false, false)
     SetPedCanRagdoll(objectId, false)
+    SetBlockingOfNonTemporaryEvents(objectId, true) -- stops ped from fleeing, fighting, running etc
   else
     log.error('Invalid chunk entity type:', data.type, 'for key:', data.key)
     return nil
