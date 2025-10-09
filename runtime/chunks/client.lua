@@ -9,6 +9,7 @@ local target = require 'modules.target.client'
 
 -- Register Net Events
 RegisterNetEvent('versa_sdk:chunks:createEntities')
+RegisterNetEvent('versa_sdk:chunks:editEntities')
 RegisterNetEvent('versa_sdk:chunks:deleteEntities')
 
 --- Create a chunk entity
@@ -54,6 +55,46 @@ local function createChunkEntity(zoneId, data)
   return objectId
 end
 
+--- Edit a chunk entity
+-- @param string key The unique key for the chunk entity
+-- @param table data The chunk entity data to update
+local function editChunkEntity(key, data)
+  for zoneId, entities in pairs(CreatedEntities) do
+    if entities[key] then
+      local objectId = entities[key]
+
+      -- If new coords are sent through- we update the coords and heading
+      if data.coords then 
+        SetEntityCoords(objectId, data.coords.x, data.coords.y, data.coords.z, false, false, false, true) 
+        if data.coords.w then SetEntityHeading(objectId, data.coords.w) end
+      end
+
+      if data.target then
+        target.removeEntity({ entity = objectId })
+        data.target.entity = objectId
+
+        target.addEntity(data.target)
+      elseif data.target == false then
+        target.removeEntity({ entity = objectId })
+      end
+
+      if data.model then
+        local coords = GetEntityCoords(objectId)
+        local orginalHash = GetEntityModel(objectId)
+        SetEntityAsMissionEntity(objectId, true, true)
+
+        CreateModelSwap(coords.x, coords.y, coords.z, 1.0, orginalHash, data.model, false)
+      end
+
+      log.debug('Edited chunk entity:', key, 'in zone:', zoneId)
+      return true
+    end
+  end
+
+  log.error('No created entity found for key:', key)
+  return false
+end
+
 --- Delete a chunk entity
 -- @param string zoneId The zone ID
 -- @param string key The unique key for the chunk entity to delete
@@ -96,15 +137,6 @@ local function cacheChunkEntity(data)
     log.error('No zone found for chunk entity at coords:', json.encode(data.coords))
     return false, 'No zone found for the given coordinates'
   end
-
-  -- Check if the model exists before adding it to the cache
-  if not lib.requestModel(data.model, 10000) then
-    log.error('Failed to load model for chunk entity:', data.model)
-    return false, 'Failed to load model'
-  end
-
-  -- Ensure the model is not clogging up client memory
-  SetModelAsNoLongerNeeded(data.model)
   
   -- Add to the zone cache
   Zones[chunkId].entities[#Zones[chunkId].entities + 1] = data
@@ -113,6 +145,41 @@ local function cacheChunkEntity(data)
   -- Check if the entity is in any of the zones the player is in/surrounding
   if chunkId == CurrentZoneId or (CurrentSurroundingZones and lib.table.contains(CurrentSurroundingZones, chunkId)) then
     createChunkEntity(chunkId, data)
+  end
+
+  return true
+end
+
+--- Edit a cached chunk entity
+-- @param string key The unique key for the chunk entity
+-- @param table data The chunk entity data to update
+local function editCachedChunkEntity(key, data)
+  local zoneId = keyToZoneId[key]
+  if not zoneId then
+    log.error('No zone found for chunk entity with key:', key)
+    return false, 'No zone found for the given key'
+  end
+
+  -- Update the zone cache
+  local zone = Zones[zoneId]
+  for i = 1, #zone.entities do
+    if zone.entities[i].key == key then
+      if data.coords then zone.entities[i].coords = data.coords end
+      if data.model then zone.entities[i].model = data.model end
+
+      if data.target then
+        zone.entities[i].target = data.target
+      elseif data.target == false then
+        zone.entities[i].target = nil
+      end
+
+      break
+    end
+  end
+
+  -- If the entity is currently created, update it
+  if CreatedEntities[zoneId] and CreatedEntities[zoneId][key] then
+    editChunkEntity(key, data)
   end
 
   return true
@@ -178,6 +245,36 @@ local function loadChunkEntities(zoneId)
   end
 end
 
+--- Check if an entity is a created chunk entity
+-- @param number entity The entity ID to check
+-- @return boolean True if it is a created chunk entity, false otherwise
+-- @return string|nil key The unique key for the chunk entity if it is a created
+local function isEntityChunkEntity(entity)
+  for _, entities in pairs(CreatedEntities) do
+    for key, objectId in pairs(entities) do
+      if objectId == entity then
+        return true, key
+      end
+    end
+  end
+  return false
+end
+
+exports('IsEntityChunkEntity', isEntityChunkEntity)
+
+--- Get the entity ID from key
+-- @param string key The unique key for the chunk entity
+-- @return number|nil The entity ID if found, nil otherwise
+local function getEntityFromKey(key)
+  local zoneId = keyToZoneId[key]
+  if zoneId and CreatedEntities[zoneId] and CreatedEntities[zoneId][key] then
+    return CreatedEntities[zoneId][key]
+  end
+  return nil
+end
+
+exports('GetEntityFromKey', getEntityFromKey)
+
 --- Events
 -- Event handler from sdk/zones/client when stepping into a new zone
 -- @param string zoneId The zone ID that was entered
@@ -219,6 +316,13 @@ AddEventHandler('versa_sdk:chunks:createEntities', function(data)
   else
     cacheChunkEntity(data)
   end
+end)
+
+-- Event Handler from server to edit entities
+-- @param string key The unique key for the chunk entity
+-- @param table data The chunk entity data to update
+AddEventHandler('versa_sdk:chunks:editEntities', function(key, data)
+  editCachedChunkEntity(key, data)
 end)
 
 -- Event Handler from server to delete entities

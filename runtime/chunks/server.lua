@@ -38,10 +38,16 @@ local function editChunkEntity(key, data)
 
   local oldChunkData = Chunks[key]
 
-  Chunks[key] = data
-  Chunks[key].resource = oldChunkData.resource -- Preserve the resource property
+  if data.coords then oldChunkData.coords = data.coords end
+  if data.model then oldChunkData.model = data.model end
 
-  -- todo: broadcast update event to clients
+  if data.target then
+    oldChunkData.target = data.target
+  elseif data.target == false then
+    oldChunkData.target = nil
+  end
+
+  TriggerClientEvent('versa_sdk:chunks:editEntities', -1, key, data)
 
   return true
 end
