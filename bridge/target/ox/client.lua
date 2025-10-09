@@ -9,6 +9,7 @@ local function formatTargetData(data)
   if not data.event then error('Missing event property in target data') end
 
   return {
+    name = 'sdk',
     label = data.title,
     icon = data.icon or 'fa-solid fa-circle',
     distance = data.distance or 2.5,
@@ -41,7 +42,7 @@ end
 function ox.removeEntity(data)
   local entities = helper.getEntitiesData(data)
 
-  return exports.ox_target:removeLocalEntity(entities, { })
+  return exports.ox_target:removeLocalEntity(entities, 'sdk')
 end
 
 -- Send the module object
