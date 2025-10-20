@@ -55,46 +55,6 @@ local function createChunkEntity(zoneId, data)
   return objectId
 end
 
---- Edit a chunk entity
--- @param string key The unique key for the chunk entity
--- @param table data The chunk entity data to update
-local function editChunkEntity(key, data)
-  for zoneId, entities in pairs(CreatedEntities) do
-    if entities[key] then
-      local objectId = entities[key]
-
-      -- If new coords are sent through- we update the coords and heading
-      if data.coords then 
-        SetEntityCoords(objectId, data.coords.x, data.coords.y, data.coords.z, false, false, false, true) 
-        if data.coords.w then SetEntityHeading(objectId, data.coords.w) end
-      end
-
-      if data.target then
-        target.removeEntity({ entity = objectId })
-        data.target.entity = objectId
-
-        target.addEntity(data.target)
-      elseif data.target == false then
-        target.removeEntity({ entity = objectId })
-      end
-
-      if data.model then
-        local coords = GetEntityCoords(objectId)
-        local orginalHash = GetEntityModel(objectId)
-        SetEntityAsMissionEntity(objectId, true, true)
-
-        CreateModelSwap(coords.x, coords.y, coords.z, 1.0, orginalHash, data.model, false)
-      end
-
-      log.debug('Edited chunk entity:', key, 'in zone:', zoneId)
-      return true
-    end
-  end
-
-  log.error('No created entity found for key:', key)
-  return false
-end
-
 --- Delete a chunk entity
 -- @param string zoneId The zone ID
 -- @param string key The unique key for the chunk entity to delete
@@ -123,6 +83,56 @@ local function deleteChunkEntity(zoneId, key)
   end
 
   log.error('No created entity found for key:', key, 'in zone:', zoneId)
+  return false
+end
+
+--- Edit a chunk entity
+-- @param string key The unique key for the chunk entity
+-- @param table data The chunk entity data to update
+local function editChunkEntity(key, data)
+  for zoneId, entities in pairs(CreatedEntities) do
+    if entities[key] then
+      local objectId = entities[key]
+
+      -- If new coords are sent through- we update the coords and heading
+      if data.coords then 
+        SetEntityCoords(objectId, data.coords.x, data.coords.y, data.coords.z, false, false, false, true) 
+        if data.coords.w then SetEntityHeading(objectId, data.coords.w) end
+      end
+
+      if data.target then
+        target.removeEntity({ entity = objectId })
+        data.target.entity = objectId
+
+        target.addEntity(data.target)
+      elseif data.target == false then
+        target.removeEntity({ entity = objectId })
+      end
+
+      if data.model then
+        local changedModel = false
+        local cachedEntityData = nil
+        for i = 1, #Zones[zoneId].entities do
+          if Zones[zoneId].entities[i].key == key then
+            deleteChunkEntity(zoneId, key)
+            createChunkEntity(zoneId, Zones[zoneId].entities[i])
+            changedModel = true
+            break
+          end
+        end
+
+        if not changedModel then
+          log.error('Failed to change model for chunk entity with key:', key, 'in zone:', zoneId)
+          return false
+        end
+      end
+
+      log.debug('Edited chunk entity:', key, 'in zone:', zoneId)
+      return true
+    end
+  end
+
+  log.error('No created entity found for key:', key)
   return false
 end
 
