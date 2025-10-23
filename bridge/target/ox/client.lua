@@ -5,25 +5,37 @@ local helper = require '@versa_sdk.utils.target'
 -- @param data table
 -- @return table
 local function formatTargetData(data)
-  if not data.title then error('Missing title property in target data') end
-  if not data.event then error('Missing event property in target data') end
+  local targetObject = {}
 
-  return {
-    name = 'sdk',
-    label = data.title,
-    icon = data.icon or 'fa-solid fa-circle',
-    distance = data.distance or 2.5,
-    canInteract = data.canInteract or nil,
-    items = data.items or nil,
-    anyItem = data.anyItem or false,
-    onSelect = function()
-      local event = data.event.type == 'client' and TriggerEvent or TriggerServerEvent
-      local eventName = data.event.name or error('Missing event name in target data')
-      local parameters = data.event.parameters or {}
+  -- ensure data is a table of entries
+  if not (type(data) == 'table') then
+    data = { data }
+  end
 
-      event(eventName, table.unpack(parameters))
-    end
-  }
+  for _, v in ipairs(data) do
+    if type(v) ~= 'table' then error('Each target data entry must be a table') end
+    if not v.title then error('Missing title property in target data') end
+    if not v.event then error('Missing event property in target data') end
+
+    targetObject[#targetObject + 1] = {
+      name = 'sdk',
+      label = v.title,
+      icon = v.icon or 'fa-solid fa-circle',
+      distance = v.distance or 2.5,
+      canInteract = v.canInteract or nil,
+      items = v.items or nil,
+      anyItem = v.anyItem or false,
+      onSelect = function()
+        local event = v.event.type == 'client' and TriggerEvent or TriggerServerEvent
+        local eventName = v.event.name or error('Missing event name in target data')
+        local parameters = v.event.parameters or {}
+
+        event(eventName, table.unpack(parameters))
+      end
+    }
+  end
+
+  return targetObject
 end
 
 --- add a target to an entity or multiple entities
