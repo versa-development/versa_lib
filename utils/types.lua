@@ -1,5 +1,6 @@
 local types = {}
 
+local controls = require 'data.controls'
 --[[
 Character Object (types.character)
 {
@@ -22,6 +23,10 @@ function types.character(data)
     },
     metadata = data.metadata,
   }
+end
+
+function types.inputControl(control)
+  return controls[control] or false
 end
 
 return types

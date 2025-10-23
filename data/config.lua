@@ -5,5 +5,6 @@ return {
   Target = 'ox', -- ox, qb
   Inventory = 'ox', -- ox, qb
   ProgressBar = 'ox', -- ox, qb
-  Notification = 'ox' -- esx, qb, mythic, okok, ox
+  Notification = 'ox', -- esx, qb, mythic, okok, ox
+  Controls = 'native' -- native (Show Controls)
 }
