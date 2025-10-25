@@ -7,8 +7,11 @@ local helper = require '@versa_sdk.utils.target'
 local function formatTargetData(data)
   local targetObject = {}
 
-  -- ensure data is a table of entries
-  if not (type(data) == 'table') then
+  -- ensure data is a table
+  if not (type(data) == 'table') then error('Target data must be a table') end
+  
+  -- ensure that data is a table of tables
+  if not data[1] then
     data = { data }
   end
 
