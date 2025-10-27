@@ -26,7 +26,7 @@ end
 --- add a target to an entity or multiple entities
 -- @param data table
 -- @return any
-function bridge.addEntity(data)
+function bridge.AddEntity(data)
   local entities = helper.getEntitiesData(data)
   local targetOptions = formatTargetData(data)
 
@@ -39,7 +39,7 @@ end
 --- remove a target from an entity or multiple entities
 -- @param data table
 -- @return any
-function bridge.removeEntity(data)
+function bridge.RemoveEntity(data)
   local entities = helper.getEntitiesData(data)
 
   return exports['qb-target']:RemoveTargetEntity(entities, { })

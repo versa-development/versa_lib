@@ -1,6 +1,6 @@
 local bridge = {}
 
-function bridge.init(data)
+function bridge.Init(data)
   local label = data.label or ''
   local duration = data.duration or 5000
   local prop = data.prop or nil
