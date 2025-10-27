@@ -1,6 +1,6 @@
-local ox = {}
+local bridge = {}
 
-function ox.send(data)
+function bridge.Send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration
@@ -19,4 +19,4 @@ function ox.send(data)
   })
 end
 
-return ox
+return bridge

@@ -1,6 +1,6 @@
-local qb = {}
+local bridge = {}
 
-function qb.send(data)
+function bridge.Send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration
@@ -13,4 +13,4 @@ function qb.send(data)
   TriggerEvent('QBCore:Notify', message, notificationType, duration)
 end
 
-return qb
+return bridge
