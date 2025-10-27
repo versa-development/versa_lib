@@ -14,7 +14,7 @@ description 'Core SDK for FiveM & RedM — modular systems, framework bridges & 
 files {
   'data/*.lua',
   'bridge/**/**/*.lua',
-  'modules/**/*.lua',
+  'modules/*.lua',
   'utils/*.lua',
 }
 
