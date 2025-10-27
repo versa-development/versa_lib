@@ -12,6 +12,7 @@ games { 'rdr3', 'gta5' }
 description 'Core SDK for FiveM & RedM — modular systems, framework bridges & dev tools'
 
 files {
+  'config.lua',
   'data/*.lua',
   'bridge/**/**/*.lua',
   'modules/*.lua',
