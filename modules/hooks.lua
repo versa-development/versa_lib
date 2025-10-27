@@ -61,7 +61,7 @@ if IsDuplicityVersion() then
     end
 
     --- Delete a registered hook listener by its ID
-    -- @param hookId string - The unique Listener ID returned from hook.on
+    -- @param hookId string - The unique Listener ID returned from hook.Listen
     -- @return boolean - Returns true if the listener was successfully deleted, false otherwise
     function Hook.Delete(hookId)
     for hookName, listeners in pairs(Hooks) do
