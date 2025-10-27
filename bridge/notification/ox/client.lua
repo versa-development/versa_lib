@@ -1,6 +1,6 @@
 local ox = {}
 
-function ox.notify(data)
+function ox.send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration

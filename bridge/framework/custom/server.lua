@@ -1,8 +1,12 @@
-local framework = {}
+local bridge = {}
 local types = require 'utils.types'
 
 --[[ 
-  CUSTOM FRAMEWORK BRIDGE FOR THE VERSA SDK
+  CUSTOM Framework BRIDGE FOR THE VERSA SDK
+
+  EVERYWHERE MARKED WITH TODO: IN THIS FILE
+  YOU NEED TO FILL IN WITH YOUR Framework FUNCTIONS
+
   IF YOU NEED HELP SETTING THIS UP, FEEL FREE TO JOIN OUR DISCORD
   DISCORD: https://discord.com/invite/FsrujTDbvg
 ]]
@@ -10,31 +14,31 @@ local types = require 'utils.types'
 --- Structure the central character object
 local function structureResponse(data)
   return types.character({
-    identifier = data.identifier,
-    source = data.source,
-    firstname = data.firstname,
-    lastname = data.lastname,
-    metadata = data.metadata
+    identifier = -- TODO:Whatever your character object sends the identifier as, place here
+    source = -- TODO:Whatever your character object sends the source as, place here
+    firstname = -- TODO:Whatever your character object sends the firstname as, place here
+    lastname = -- TODO:Whatever your character object sends the lastname as, place here
+    metadata = -- TODO:Whatever your character object sends the metadata as, place here
   })
 end
 
-function framework.getPlayer(source)
-  local player = -- Function to get the character data from the source passed by the function
+function bridge.GetPlayer(source)
+  local player = -- TODO:Function to get the character data from the source passed by the function
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function framework.getPlayerFromIdentifier(identifier)
-  local player = -- Function to get the character data from the identifier passed by the function
+function bridge.GetPlayerFromIdentifier(identifier)
+  local player = -- TODO:Function to get the character data from the identifier passed by the function
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function framework.getPlayers()
+function bridge.GetPlayers()
   local data = {}
-  local players = -- Function to get all the characters data
+  local players = -- TODO:Function to get all the characters data
   
   for i = 1, #players do
     data[#data + 1] = structureResponse(players[i])
@@ -43,20 +47,20 @@ function framework.getPlayers()
   return data
 end
 
-function framework.getMetaDataValue(source, key)
-  return -- Function to get metadata value from the source and key
+function bridge.GetMetaDataValue(source, key)
+  return -- TODO:Function to get metadata value from the source and key
 end
 
-function framework.setMetaDataValue(source, key, value)
-  return -- Function to set metadata value from the source, key and value
+function bridge.SetMetaDataValue(source, key, value)
+  return -- TODO:Function to set metadata value from the source, key and value
 end
 
-function framework.addMoney(source, type, amount, reason)
-  return -- Function to add money from the source, type, amount and reason
+function bridge.AddMoney(source, type, amount, reason)
+  return -- TODO:Function to add money from the source, type, amount and reason
 end
 
-function framework.removeMoney(source, type, amount, reason)
-  return -- Function to remove money from the source, type, amount and reason
+function bridge.RemoveMoney(source, type, amount, reason)
+  return -- TODO:Function to remove money from the source, type, amount and reason
 end
 
-return framework
+return bridge

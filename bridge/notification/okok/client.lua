@@ -1,6 +1,6 @@
-local okok = {}
+local bridge = {}
 
-function okok.notify(data)
+function bridge.Send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration
@@ -9,4 +9,4 @@ function okok.notify(data)
   exports.okokNotify:Alert(title, message, duration, notificationType, false)
 end
 
-return okok
+return bridge

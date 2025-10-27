@@ -1,4 +1,4 @@
-local qb = {}
+local bridge = {}
 local helper = require '@versa_sdk.utils.target'
 
 --- format the target data from the input
@@ -26,7 +26,7 @@ end
 --- add a target to an entity or multiple entities
 -- @param data table
 -- @return any
-function qb.addEntity(data)
+function bridge.addEntity(data)
   local entities = helper.getEntitiesData(data)
   local targetOptions = formatTargetData(data)
 
@@ -39,11 +39,11 @@ end
 --- remove a target from an entity or multiple entities
 -- @param data table
 -- @return any
-function qb.removeEntity(data)
+function bridge.removeEntity(data)
   local entities = helper.getEntitiesData(data)
 
   return exports['qb-target']:RemoveTargetEntity(entities, { })
 end
 
 -- Send the module object
-return qb
+return bridge

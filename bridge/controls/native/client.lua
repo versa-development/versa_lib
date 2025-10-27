@@ -1,11 +1,11 @@
-local controls = {}
+local bridge = {}
 
-function controls.show(data)
+function bridge.Show(data)
     TriggerEvent('versa_sdk:showControls', data)
 end
 
-function controls.hide()
+function bridge.Hide()
     TriggerEvent('versa_sdk:hideControls')
 end
 
-return controls
+return bridge

@@ -1,6 +1,6 @@
-local mythic = {}
+local bridge = {}
 
-function mythic.notify(data)
+function bridge.Send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration
@@ -13,4 +13,4 @@ function mythic.notify(data)
   exports.mythic_notify:DoCustomHudText(notificationType, message, duration)
 end
 
-return mythic
+return bridge

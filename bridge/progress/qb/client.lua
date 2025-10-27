@@ -1,6 +1,6 @@
-local progressBar = {}
+local bridge = {}
 
-function progressBar.init(data)
+function bridge.init(data)
   local label = data.label or ''
   local duration = data.duration or 5000
   local prop = data.prop or nil
@@ -44,4 +44,4 @@ function progressBar.init(data)
   end)
 end
 
-return progressBar
+return bridge

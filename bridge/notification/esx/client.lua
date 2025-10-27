@@ -1,6 +1,6 @@
-local esx = {}
+local bridge = {}
 
-function esx.notify(data)
+function bridge.Send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration
@@ -9,4 +9,4 @@ function esx.notify(data)
   exports.esx_notify:Notify(message, notificationType, duration, title)
 end
 
-return esx
+return bridge

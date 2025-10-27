@@ -1,6 +1,6 @@
 local qb = {}
 
-function qb.notify(data)
+function qb.send(data)
   local title = data.title
   local message = data.message
   local duration = data.duration

@@ -1,4 +1,4 @@
-local qbx = {}
+local bridge = {}
 local types = require 'utils.types'
 
 --- Structure the central character object
@@ -12,21 +12,21 @@ local function structureResponse(data)
   })
 end
 
-function qbx.getPlayer(source)
+function bridge.GetPlayer(source)
   local player = exports.qbx_core:GetPlayer(source)
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function qbx.getPlayerFromIdentifier(identifier)
+function bridge.GetPlayerFromIdentifier(identifier)
   local player = exports.qbx_core:GetPlayerByCitizenId(identifier)
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function qbx.getPlayers()
+function bridge.GetPlayers()
   local data = {}
   local players = exports.qbx_core:GetQBPlayers()
   
@@ -37,20 +37,20 @@ function qbx.getPlayers()
   return data
 end
 
-function qbx.getMetaDataValue(source, key)
+function bridge.GetMetaDataValue(source, key)
   return exports.qbx_core:GetMetadata(source, key)
 end
 
-function qbx.setMetaDataValue(source, key, value)
+function bridge.SetMetaDataValue(source, key, value)
   return exports.qbx_core:SetMetadata(source, key, value)
 end
 
-function qbx.addMoney(source, type, amount, reason)
+function bridge.AddMoney(source, type, amount, reason)
   return exports.qbx_core:AddMoney(source, type, amount, reason)
 end
 
-function qbx.removeMoney(source, type, amount, reason)
+function bridge.RemoveMoney(source, type, amount, reason)
   return exports.qbx_core:RemoveMoney(source, type, amount, reason)
 end
 
-return qbx
+return bridge

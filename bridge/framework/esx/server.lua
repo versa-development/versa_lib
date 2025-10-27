@@ -1,4 +1,4 @@
-local esx = {}
+local bridge = {}
 local types = require 'utils.types'
 
 --- Structure the central character object
@@ -12,21 +12,21 @@ local function structureResponse(data)
   })
 end
 
-function esx.getPlayer(source)
+function bridge.GetPlayer(source)
   local player = exports.esx_core:GetPlayer(source)
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function esx.getPlayerFromIdentifier(identifier)
+function bridge.GetPlayerFromIdentifier(identifier)
   local player = exports.esx_core:GetPlayerByCitizenId(identifier)
   if not player then return false end
 
   return structureResponse(player)
 end
 
-function esx.getPlayers()
+function bridge.GetPlayers()
   local data = {}
   local players = exports.esx_core:GetQBPlayers()
   
@@ -37,20 +37,20 @@ function esx.getPlayers()
   return data
 end
 
-function esx.getMetaDataValue(source, key)
+function bridge.GetMetaDataValue(source, key)
   return exports.esx_core:GetMetadata(source, key)
 end
 
-function esx.setMetaDataValue(source, key, value)
+function bridge.SetMetaDataValue(source, key, value)
   return exports.esx_core:SetMetadata(source, key, value)
 end
 
-function esx.addMoney(source, type, amount, reason)
+function bridge.AddMoney(source, type, amount, reason)
   return exports.esx_core:AddMoney(source, type, amount, reason)
 end
 
-function esx.removeMoney(source, type, amount, reason)
+function bridge.RemoveMoney(source, type, amount, reason)
   return exports.esx_core:RemoveMoney(source, type, amount, reason)
 end
 
-return esx
+return bridge
