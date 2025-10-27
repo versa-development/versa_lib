@@ -1,5 +1,5 @@
 local bridge = {}
-local types = require 'utils.types'
+local types = require 'utils/types'
 
 --- Structure the central character object
 local function structureResponse(data)

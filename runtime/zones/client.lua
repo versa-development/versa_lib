@@ -2,8 +2,8 @@
 Zones = {}
 
 -- Module imports
-local config = require 'data.config'
-local log = require 'utils.logger'
+local config = require 'config'
+local log = require 'utils/logger'
 
 -- Zone coordinates and values for the world grid
 local ZONE_SIZE <const> = 450

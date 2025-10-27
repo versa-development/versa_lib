@@ -1,5 +1,5 @@
-local config = require 'data.config'
-local log = require 'utils.logger'
+local config = require 'config'
+local log = require 'utils/logger'
 
 CURRENT_VERSION = GetResourceMetadata(GetCurrentResourceName(), 'version') or '0.0.0'
 

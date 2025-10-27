@@ -1,5 +1,5 @@
 local bridge = {}
-local helper = require '@versa_sdk.utils.target'
+local helper = require 'utils/target'
 
 --- format the target data from the input
 -- @param data table

@@ -1,4 +1,4 @@
-local config = require 'data.config'
+local config = require 'config'
 
 local Logger = {}
 

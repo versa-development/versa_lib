@@ -1,7 +1,7 @@
 local currentlyShown = false
 
-local types = require 'utils.types'
-local log = require 'utils.logger'
+local types = require 'utils/types'
+local log = require 'utils/logger'
 
 RegisterNetEvent('versa_sdk:showControls', function(data)
     if currentlyShown ~= false then

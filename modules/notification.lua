@@ -10,7 +10,7 @@ if IsDuplicityVersion() then
 
     return Notification
 else
-    local config = require 'data.config'
+    local config = require 'config'
     local bridge = require ('bridge.notification.' .. config.Notification .. '.client')
 
     return bridge

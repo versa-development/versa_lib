@@ -1,6 +1,7 @@
 local types = {}
 
-local controls = require 'data.controls'
+local controls = require 'data/controls'
+
 --[[
 Character Object (types.character)
 {

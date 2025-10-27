@@ -4,8 +4,8 @@ CreatedEntities = {}
 local keyToZoneId = {} 
 
 -- Module imports
-local Target = require 'modules.target'
-local log = require 'utils.logger'
+local Target = require 'modules/target'
+local log = require 'utils/logger'
 
 -- Register Net Events
 RegisterNetEvent('versa_sdk:chunks:createEntities')

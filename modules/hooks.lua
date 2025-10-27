@@ -1,4 +1,4 @@
-local log = require 'utils.logger'
+local log = require 'utils/logger'
 
 --- Generate a unique Listener ID
 -- @param resource string - Invoking Resource Name

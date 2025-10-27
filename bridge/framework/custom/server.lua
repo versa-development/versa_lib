@@ -1,5 +1,5 @@
 local bridge = {}
-local types = require 'utils.types'
+local types = require 'utils/types'
 
 --[[ 
   CUSTOM Framework BRIDGE FOR THE VERSA SDK
