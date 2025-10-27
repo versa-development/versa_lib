@@ -2,6 +2,9 @@ if IsDuplicityVersion() then
     local Notification = {}
 
     function Notification.Send(source, data)
+        if type(source) ~= 'number' then error('Missing source parameter in Notification.Send, got ' .. type(source)) end
+        if type(data) ~= 'table' then error('Missing data parameter in Notification.Send, got ' .. type(data)) end
+
         TriggerClientEvent('versa_sdk:client:notification', source, data)
     end
 
