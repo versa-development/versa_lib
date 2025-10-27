@@ -7,7 +7,7 @@ dependencies {
 
 name 'versa_sdk'
 author 'Versa Development'
-version '0.1'
+version '1.0.0'
 games { 'rdr3', 'gta5' }
 description 'Core SDK for FiveM & RedM — modular systems, framework bridges & dev tools'
 
