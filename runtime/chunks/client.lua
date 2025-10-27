@@ -4,8 +4,8 @@ CreatedEntities = {}
 local keyToZoneId = {} 
 
 -- Module imports
+local Target = require 'modules.target'
 local log = require 'utils.logger'
-local target = require 'modules.target'
 
 -- Register Net Events
 RegisterNetEvent('versa_sdk:chunks:createEntities')
@@ -49,7 +49,7 @@ local function createChunkEntity(zoneId, data)
 
   if data.target then
     data.target.entity = objectId
-    target.addEntity(data.target)
+    Target.AddEntity(data.target)
   end
 
   return objectId
@@ -101,12 +101,12 @@ local function editChunkEntity(key, data)
       end
 
       if data.target then
-        target.removeEntity({ entity = objectId })
+        Target.RemoveEntity({ entity = objectId })
         data.target.entity = objectId
 
-        target.addEntity(data.target)
+        Target.AddEntity(data.target)
       elseif data.target == false then
-        target.removeEntity({ entity = objectId })
+        Target.RemoveEntity({ entity = objectId })
       end
 
       if data.model then
