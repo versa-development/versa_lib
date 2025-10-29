@@ -4,7 +4,6 @@ function bridge.Init(data)
   local label = data.label or ''
   local duration = data.duration or 5000
   local prop = data.prop or nil
-  local animation = data.animation or nil
   local states = data.states or nil
 
   -- Versa lib uses "position"/"rotation"; Ox uses "pos"/"rot"
@@ -32,7 +31,11 @@ function bridge.Init(data)
       mouse = states.disableMouseMovement or false,
       sprint = states.disableSprint or false
     },
-    anim = animation,
+    anim = data.animation and {
+      dict = data.animation.dict,
+      clip = data.animation.name,
+      flags = data.animation.flags or 0
+    } or nil,
     prop = prop,
   })
 end
