@@ -19,7 +19,13 @@ RegisterNetEvent('versa_sdk:showControls', function(data)
     CallScaleformMovieMethod(handle, 'CLEAR_ALL')
     CallScaleformMovieMethodWithNumber(handle, 'TOGGLE_MOUSE_BUTTONS', 0)
 
-    for i, button in ipairs(data) do
+    -- flip the array as GTA draws them from right to left
+    local reversed = {}
+    for i = #data, 1, -1 do
+        reversed[#reversed + 1] = data[i]
+    end
+
+    for i, button in ipairs(reversed) do
         local buttonControl = types.inputControl(button.control)
         if not buttonControl then
             log.warn('Invalid control key provided to showControls: ' .. tostring(button.control))
