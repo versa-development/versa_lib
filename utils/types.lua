@@ -22,6 +22,11 @@ function types.character(data)
       last = data.lastname,
       full = data.firstname .. ' ' .. data.lastname,
     },
+    job = {
+      label = data.jobLabel,
+      name = data.jobName,
+      grade = data.jobGrade,
+    },
     metadata = data.metadata,
   }
 end

@@ -18,11 +18,14 @@ local function structureResponse(data)
     source = -- TODO:Whatever your character object sends the source as, place here
     firstname = -- TODO:Whatever your character object sends the firstname as, place here
     lastname = -- TODO:Whatever your character object sends the lastname as, place here
+    jobName = -- TODO:Whatever your character object sends the job name as, place here
+    jobLabel = -- TODO:Whatever your character object sends the job label as, place here
+    jobGrade =  -- TODO:Whatever your character object sends the job grade as, place here
     metadata = -- TODO:Whatever your character object sends the metadata as, place here
   })
 end
 
-bridge.Name = 'custom'
+bridge.Name = 'custom' -- TODO: go into runtime/framework/server.lua and go to the bottom of the if/elseif statement and fill in info
 
 function bridge.GetPlayer(source)
   local player = -- TODO:Function to get the character data from the source passed by the function

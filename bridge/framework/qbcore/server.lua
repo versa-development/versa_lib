@@ -1,7 +1,7 @@
 local bridge = {}
 
 local types = require 'utils/types'
-local QBX = exports.qbx_core
+local QBCore = exports['qb-core']:GetCoreObject()
 
 --- Structure the central character object
 local function structureResponse(data)
@@ -17,17 +17,17 @@ local function structureResponse(data)
   })
 end
 
-bridge.Name = 'qbox'
+bridge.Name = 'qbcore'
 
 function bridge.GetPlayer(source)
-  local player = QBX:GetPlayer(source)
+  local player = QBCore.Functions.GetPlayer(source)
   if not player then return false end
 
   return structureResponse(player)
 end
 
 function bridge.GetPlayerFromIdentifier(identifier)
-  local player = QBX:GetPlayerByCitizenId(identifier)
+  local player = QBCore.Functions.GetPlayerByCitizenId(identifier)
   if not player then return false end
 
   return structureResponse(player)
@@ -35,7 +35,7 @@ end
 
 function bridge.GetPlayers()
   local data = {}
-  local players = QBX:GetQBPlayers()
+  local players = QBCore.Functions.GetQBPlayers()
   
   for i = 1, #players do
     data[#data + 1] = structureResponse(players[i])
@@ -45,19 +45,31 @@ function bridge.GetPlayers()
 end
 
 function bridge.GetMetaDataValue(source, key)
-  return QBX:GetMetadata(source, key)
+    local Player = QBCore.Functions.GetPlayer(source)
+    if not Player then return end
+
+    return Player.Functions.GetMetaData(key)
 end
 
 function bridge.SetMetaDataValue(source, key, value)
-  return QBX:SetMetadata(source, key, value)
+  local Player = QBCore.Functions.GetPlayer(source)
+  if not Player then return end
+  
+  return Player.Functions.SetMetaData(key, value)
 end
 
 function bridge.AddMoney(source, type, amount, reason)
-  return QBX:AddMoney(source, type, amount, reason)
+  local Player = QBCore.Functions.GetPlayer(source)
+  if not Player then return end
+  
+  return Player.Functions.AddMoney(type, amount, reason)
 end
 
 function bridge.RemoveMoney(source, type, amount, reason)
-  return QBX:RemoveMoney(source, type, amount, reason)
+  local Player = QBCore.Functions.GetPlayer(source)
+  if not Player then return end
+  
+  return Player.Functions.RemoveMoney(type, amount, reason)
 end
 
 return bridge
